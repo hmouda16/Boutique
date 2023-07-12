@@ -3,63 +3,42 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-/**
- * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(
- *     fields={"email"},
- *     message="Cette email est déja utilisé.", groups={"register"}
- * )
- * * @UniqueEntity(
- *     fields={"pseudo"},
- *     message="Ce pseudo est déja utilisé.", groups={"register"}
- * )
- */
-
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'Cette email est déja utilisé.', groups: ['register'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
 
 
 
-    /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     * @Assert\NotBlank(message = "Le champ ne doit pas etre vide"), groups={"register"}
-     * @Assert\Email(
-     *     message = "The email '{{ value }}' is not a valid email.", groups={"register"}
-     * )
-     */
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Assert\NotBlank(message: 'Le champ ne doit pas etre vide')]
+    #[Assert\Email(message: "The email '{{ value }}' is not a valid email.", groups: ['register'])]
     private $email;
 
 
 
 
-    /**
-     * @Assert\NotBlank(message = "Le champ confirmation emailne doit pas etre vide", groups={"register"})
-     * @Assert\EqualTo(
-     *    propertyPath="email",
-     *   message ="Les deux email de passes ne sont pas identiques", groups={"register"}
-     * )
-     */
+    #[Assert\NotBlank(message: 'Le champ confirmation emailne doit pas etre vide', groups: ['register'])]
+    #[Assert\EqualTo(propertyPath: 'email', message: 'Les deux email de passes ne sont pas identiques', groups: ['register'])]
     public $confirmEmail;
 
 
 
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: 'json')]
     private $roles = [];
 
 
@@ -67,95 +46,62 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank(message = "Le champ ne doit pas etre vide", groups={"register"})
-     * Assert\Regex(
-     *     pattern="#(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}#",
-     *     match=true,
-     *     message="Le message doit contenir au moins un chiffre , au moins une majuscule , au moins 8 caractère", groups={"register"}
-     * )
      */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank(message: 'Le champ ne doit pas etre vide', groups: ['register'])]
     private $password;
 
 
-    /**
-     * @Assert\NotBlank(message = "Le champ ne doit pas etre vide", groups={"register"})
-     * @Assert\EqualTo(
-     *    propertyPath="password",
-     *   message ="Les deux mot de passes ne sont pas identiques",groups={"register"}
-     * )
-     */
+
+    #[Assert\EqualTo(propertyPath: 'password', message: 'Les deux mot de passes ne sont pas identiques', groups: ['register'])]
     public $confirmPassword;
 
 
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     *  @Assert\NotBlank(message = "Le champ ne doit pas etre vide", groups={"register"})
-     *  @Assert\Length(
-     *      min = 2,
-     *      max = 50,
-     *      minMessage = "Le message doit etre au moins {{ limit }} caractere",
-     *      maxMessage = "Le prenom ne doit pas dépasser {{ limit }} 10 caractère"
-     * )
-     */
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message: 'Le champ ne doit pas etre vide', groups: ['register'])]
+    #[Assert\Length(min: 2, max: 50, minMessage: 'Le message doit etre au moins {{ limit }} caractere', maxMessage: 'Le prenom ne doit pas dépasser {{ limit }} 10 caractère')]
     private $lastName;
 
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message = "Le champ ne doit pas etre vide",groups={"register"})
-     *  @Assert\Length(
-     *      min = 2,
-     *      max = 50,
-     *      minMessage = "Le message doit etre au moins {{ limit }} caractere",
-     *      maxMessage = "Le prenom ne doit pas dépasser {{ limit }} 10 caractère",groups={"register"}
-     * )
-     */
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message: 'Le champ ne doit pas etre vide', groups: ['register'])]
+    #[Assert\Length(min: 2, max: 50, minMessage: 'Le message doit etre au moins {{ limit }} caractere', maxMessage: 'Le prenom ne doit pas dépasser {{ limit }} 10 caractère', groups: ['register'])]
     private $firstName;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $age;
 
 
-    /**
-     *  @Assert\NotBlank(message = "Le champ mot de passe ne doit pas etre vide")
-     */
+
     private $oldPassword;
 
-    /** 
-     * @Assert\NotBlank(message = "Le champ ne doit pas etre vide")
-     * Assert\Regex(
-     *     pattern="#(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}#",
-     *     match=true,
-     *     message="Le message doit contenir au moins un chiffre , au moins une majuscule , au moins 8 caractère"
-     * )
-     */
 
     private $NewPassword;
 
-    /**
-     * @Assert\NotBlank(message = "Le champ ne doit pas etre vide")
-     * @Assert\EqualTo(
-     *    propertyPath="newPassword",
-     *   message ="Les deux mot de passes ne sont pas identiques"
-     * )
-     */
+
+    #[Assert\EqualTo(propertyPath: 'newPassword', message: 'Les deux mot de passes ne sont pas identiques')]
     private $confirmNewPassword;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message = "Le pseudo ne doit pas etre vide", groups={"register"})
-     * @Assert\Length(
-     * min = 6,
-     * max=20,
-     * minMessage = "le pseudo doit etre d'au moins {{limit}} cararctéres",
-     * minMessage = "le pseudo doit pas dépasser  {{limit}} cararctéres",groups={"register"}
-     * )
-     */
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message: 'Le pseudo ne doit pas etre vide', groups: ['register'])]
+    #[Assert\Length(min: 6, max: 20, minMessage: 'le pseudo doit pas dépasser  {{limit}} cararctéres', groups: ['register'])]
     private $pseudo;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Adress::class)]
+    private Collection $adresses;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class)]
+    private Collection $orders;
+
+    #[ORM\Column]
+    private ?bool $active = null;
+
+    public function __construct()
+    {
+        $this->adresses = new ArrayCollection();
+        $this->orders = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -353,6 +299,78 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPseudo(string $pseudo): self
     {
         $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Adress>
+     */
+    public function getAdresses(): Collection
+    {
+        return $this->adresses;
+    }
+
+    public function addAdress(Adress $adress): self
+    {
+        if (!$this->adresses->contains($adress)) {
+            $this->adresses->add($adress);
+            $adress->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdress(Adress $adress): self
+    {
+        if ($this->adresses->removeElement($adress)) {
+            // set the owning side to null (unless already changed)
+            if ($adress->getUser() === $this) {
+                $adress->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getUser() === $this) {
+                $order->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
 
         return $this;
     }

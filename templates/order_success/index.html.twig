@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande Validée
+{% endblock %}
+
+{% block content %}
+
+	<h2>Confirmation de la commande</h2>
+	<p>Merci
+		{{order.user.firstName}}
+		{{order.user.LastName}}
+		pour votre commande N°:
+		{{order.reference}}
+		qui sera livrée à l'adresse:
+		<br>
+		{{order.delivery.name}}
+		<br>
+		{{order.delivery.address}}
+		<br>
+		{{order.delivery.zipCode}}
+		-
+		{{order.delivery.city}}</p>
+
+
+{% endblock %}

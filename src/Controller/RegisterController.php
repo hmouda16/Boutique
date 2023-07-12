@@ -29,9 +29,7 @@ class RegisterController extends AbstractController
 
 
 
-    /**
-     * @Route("/inscription", name="register")
-     */
+    #[Route(path: '/inscription', name: 'register')]
     public function index(Request $request): Response
     {
 
@@ -50,10 +48,16 @@ class RegisterController extends AbstractController
             );
             $user->setPassword($hashedPassword);
 
+            $user->setActive(0);
+
 
 
             $this->manager->persist($user);
             $this->manager->flush();
+
+            $token = sha1($user->getEmail() . $user->getPassword());
+            $content = $this->getParameter('DOMAINE') . 'inscription' . $user->getEmail() . '/' . $token;
+            mail($user->getEmail(), 'activation du compte', $content);
 
             $this->addFlash(
                 'success',
@@ -66,5 +70,31 @@ class RegisterController extends AbstractController
         return $this->render('register/index.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    #[Route(path: '/inscription/{email}/{token}', name: 'activate')]
+    public function activation(User $user, $token, EntityManagerInterface $manager): Response
+    {
+        if ($user->getEmail()) {
+            $tokenVerif = sha1($user->getEmail() . $user->getPassword());
+
+            if ($token == $tokenVerif) {
+                $user->setActive(1);
+            }
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'Compte activé avec succes'
+            );
+        } else {
+            $this->addFlash(
+                'danger',
+                'Le lien est incorect'
+            );
+        }
+
+
+        return $this->redirectToRoute('app_login');
     }
 }

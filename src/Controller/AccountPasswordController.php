@@ -25,9 +25,7 @@ class AccountPasswordController extends AbstractController
     }
 
 
-    /**
-     * @Route("/compte/modifier-mot-de-passe", name="app_account_password")
-     */
+    #[Route(path: '/compte/modifier-mot-de-passe', name: 'app_account_password')]
     public function index(Request $request): Response
     {
 

@@ -4,6 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    FOLDER_UPLOAD_IMAGE: '%env(FOLDER_UPLOAD_IMAGE)%'
+    DOMAINE: '%env(DOMAINE)%'
+    STRIPE_SECRET_KEY: '%env(STRIPE_SECRET_KEY)%'
 
 services:
     # default configuration for services in *this* file

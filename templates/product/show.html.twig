@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos produits - MyBoutique
+{% endblock %}
+
+{% block content %}
+	<h1 class="mt-3">{{product.name }}</h1>
+
+	<div class="row">
+		<div class="col-md-5">
+
+			<img src="/uploads/images/{{product.illustration}}" alt=" {{product.name }} " class=" img-fluid">
+		</div>
+
+		<div class="col-md-7">
+			<h3>{{product.name }}</h3>
+			<p>{{product.subtitle}}</p>
+			<strong>{{(product.price/100)| number_format(2)}}$</strong>
+			<hr>
+			<p>{{product.description|striptags('<br><div><strong><ul><li>')|raw}}</p>
+			<a href="{{path('add_cart',{'id':product.id})}}" class="btn btn-warning">Ajouter au panier</a>
+
+
+		</div>
+
+	</div>
+
+
+{% endblock %}

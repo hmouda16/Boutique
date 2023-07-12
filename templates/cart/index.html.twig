@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon panier
+{% endblock %}
+
+{% block content %}
+
+	<h1>Mon Panier</h1>
+	{% if products | length >0 %}
+		<div class="text-end">
+			<a href="{{path('delete')}}" class="btn btn-danger" onclick="return confirm('Etes vous sûr ?')">
+				<i>Vider le Panier</i>
+			</a>
+		</div>
+
+		<hr>
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">Produit</th>
+					<th scope="col">Nom</th>
+					<th scope="col">Quantité</th>
+					<th scope="col">Prix</th>
+					<th scope="col">Total</th>
+					<th scope="col"></th>
+
+
+				</tr>
+			</thead>
+			<tbody>
+				{% set total = 0 %}
+				{% for product in products %}
+					{% set total = total + product.product[0].price*product.quantity %}
+					<tr>
+						<th scope="row">
+							<img src="/uploads/images/{{product.product[0].illustration}}" alt="{{product.product[0].name}}" class="img-fluid" style="height:100px;">
+						</th>
+						<td>{{product.product[0].name}}</td>
+
+						<td>
+							<a href="{{path('decrease',{'id':product.product[0].id})}}" class="btn btn-primary">
+								<i class="fas fa-minus"></i>
+							</a>
+							{{product.quantity}}
+							<a href="{{path('add_cart',{'id':product.product[0].id})}}" class="btn btn-primary">
+								<i class="fas fa-plus"></i>
+							</a>
+						</td>
+						<td>{{(product.product[0].price/100) | number_format(2)}}$</td>
+						<td>{{(product.product[0].price*product.quantity/100) | number_format(2)}}$</td>
+						<td>
+							<a href="{{path('remove',{'id':product.product[0].id})}}" class="btn btn-danger" onclick="return confirm('Etes vous sûr ?')">
+								<i class="fas fa-trash-alt"></i>
+							</a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<div class="text-end">
+			<b>Nombre de produits:{{products | length}}</b>
+			<br>
+			<b>Total du Panier:{{total/100 | number_format(2) }}$</b>
+		</div>
+		<a href="{{path('order')}}" class="btn btn-success col-12">Valider le Panier</a>
+	{% else %}
+
+		<div class="alert alert-info text-center mt-5">Votre Panier est vide</div>
+	{% endif %}
+
+{% endblock %}

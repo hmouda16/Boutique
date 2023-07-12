@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes adresses -My Boutique!
+{% endblock %}
+
+{% block content %}
+	<a href="{{path('add_address')}}" class="btn btn-primary float-end mt-3">Ajouter une adresse</a>
+
+
+	<h1>Mes adresses</h1>
+	<a href="{{path('app_account')}}">Retour</a>
+
+	<hr>
+
+	<div class="row">
+		{% for adresse in adresses %}
+			<div class="col-md-4">
+				<div class="card" style="width: 18rem;">
+					<div class="card-body">
+						<h5 class="card-title">{{adresse.name}}</h5>
+						<p class="card-text">{{adresse.address}}<br>
+							{{adresse.zipCode}}
+							-
+							{{adresse.city}}
+						</p>
+						<a href="{{path('edit_address',{'id':adresse.id})}}" class="btn btn-info">Modifier</a>
+
+						<a href="{{path('delete_address',{'id':adresse.id})}}" class="btn btn-danger" onclick="return confirm('Etes vous sûr ?')">Supprimer</a>
+
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+
+{% endblock %}

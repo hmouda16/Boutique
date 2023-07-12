@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande!
+{% endblock %}
+
+{% block content %}
+	<h1>Je passe ma commande</h1>
+	<p>Choisissez vos préférences avant de passez commande</p>
+	<hr>
+	<div class="row">
+		<div class="col-md-6">
+
+			{{form_start(form)}}
+			{{form_row(form.adresses)}}
+			{{form_row(form.transporteurs)}}
+			<button type="submit" class="btn btn-success col-12">Valider ma commande
+			</button>
+			{{form_end(form)}}
+
+
+		</div>
+
+		<div class="col-md-6">
+			{% for product in tabProducts %}
+
+
+				<div class="row mt-3">
+
+					<div class="col-2">
+						<img src="/uploads/images/{{product.product[0].illustration}}" class="img-fluid" alt="">
+					</div>
+
+					<div class="col-8">
+						{{product.product[0].name}}
+					</div>
+
+					<div class="col-2">
+						{{product.quantity}}
+					</div>
+
+
+				</div>
+			{% endfor %}
+		</div>
+
+
+	</div>
+
+
+{% endblock %}
